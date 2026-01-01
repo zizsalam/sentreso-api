@@ -32,6 +32,10 @@ INSTALLED_APPS = [
     'apps.core',
     'apps.masters',
     'apps.agents',
+    'apps.collections',
+    'apps.whatsapp',
+    'apps.reconciliation',
+    'apps.reports',
 ]
 
 MIDDLEWARE = [
