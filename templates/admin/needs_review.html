@@ -1,0 +1,45 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Needs Review - Pinpay Admin{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <header class="page-header">
+        <h1 class="page-title">Needs review</h1>
+        <p class="page-subtitle">Unmatched payments requiring reconciliation</p>
+    </header>
+
+    <div class="collections-table-wrapper">
+        <table class="collections-table">
+            <thead>
+                <tr>
+                    <th>Agent</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Transaction Ref</th>
+                    <th>Received</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if unmatched_payments %}
+                    {% for payment in unmatched_payments %}
+                    <tr>
+                        <td>{{ payment.agent.name }}</td>
+                        <td>{{ payment.amount }} FCFA</td>
+                        <td><span class="payment-method">{{ payment.get_payment_method_display }}</span></td>
+                        <td><code class="txn-ref">{{ payment.transaction_reference|truncatechars:20 }}</code></td>
+                        <td>{{ payment.received_at|date:"Y-m-d H:i" }}</td>
+                        <td><a href="#" class="action-link">Review</a></td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="empty">No unmatched payments</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

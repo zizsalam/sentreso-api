@@ -1,0 +1,57 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Settings - Pinpay Admin{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <header class="page-header">
+        <h1 class="page-title">Settings</h1>
+        <p class="page-subtitle">Account settings and API configuration</p>
+    </header>
+
+    <div class="settings-sections">
+        <!-- Master Info -->
+        <section class="settings-section">
+            <h2 class="settings-section-title">Account Information</h2>
+            <div class="settings-content">
+                <div class="settings-row">
+                    <span class="settings-label">Name</span>
+                    <span class="settings-value">{{ master.name }}</span>
+                </div>
+                <div class="settings-row">
+                    <span class="settings-label">Email</span>
+                    <span class="settings-value">{{ master.email }}</span>
+                </div>
+                <div class="settings-row">
+                    <span class="settings-label">Status</span>
+                    <span class="settings-value">
+                        {% if master.is_active %}
+                            <span class="status-badge status-paid">Active</span>
+                        {% else %}
+                            <span class="status-badge status-pending">Inactive</span>
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="settings-row">
+                    <span class="settings-label">Created</span>
+                    <span class="settings-value">{{ master.created_at|date:"Y-m-d H:i" }}</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- API Key -->
+        <section class="settings-section">
+            <h2 class="settings-section-title">API Key</h2>
+            <div class="settings-content">
+                <div class="settings-row">
+                    <span class="settings-label">API Key</span>
+                    <div class="settings-value">
+                        <code class="api-key-display">{{ api_key }}</code>
+                    </div>
+                </div>
+                <p class="settings-note">Use this API key to authenticate API requests. Keep it secure and never share it publicly.</p>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

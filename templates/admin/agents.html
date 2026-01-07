@@ -1,0 +1,51 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Agents - Pinpay Admin{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <header class="page-header">
+        <h1 class="page-title">Agents</h1>
+        <p class="page-subtitle">Manage payment agents</p>
+    </header>
+
+    <div class="collections-table-wrapper">
+        <table class="collections-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>WhatsApp</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if agents %}
+                    {% for agent in agents %}
+                    <tr>
+                        <td>{{ agent.name }}</td>
+                        <td>{{ agent.whatsapp_number }}</td>
+                        <td>{{ agent.phone_number|default:"—" }}</td>
+                        <td>
+                            {% if agent.is_active %}
+                                <span class="status-badge status-paid">Active</span>
+                            {% else %}
+                                <span class="status-badge status-pending">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ agent.created_at|date:"Y-m-d" }}</td>
+                        <td><a href="#" class="action-link">View</a></td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="empty">No agents found</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

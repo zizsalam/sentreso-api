@@ -1,0 +1,45 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Today - Pinpay Admin{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <header class="page-header">
+        <h1 class="page-title">Today</h1>
+        <p class="page-subtitle">What needs action today</p>
+    </header>
+
+    <div class="collections-table-wrapper">
+        <table class="collections-table">
+            <thead>
+                <tr>
+                    <th>Payer</th>
+                    <th>Amount</th>
+                    <th>Due</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if collections %}
+                    {% for collection in collections %}
+                    <tr>
+                        <td>{{ collection.agent.name }}</td>
+                        <td>{{ collection.amount }} FCFA</td>
+                        <td>{{ collection.due_date|date:"Y-m-d" }}</td>
+                        <td><span class="status-badge status-{{ collection.status }}">{{ collection.get_status_display }}</span></td>
+                        <td><a href="#" class="action-link">View</a></td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="empty">No collections for today</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+

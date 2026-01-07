@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Pinpay API First Financial Operations Engine{% endblock %}
+
+{% block content %}
+<main class="homepage">
+    <!-- 1. Hero Section (API-first) -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="hero-title">Automate collections, reconciliation, and WhatsApp reminders via API</h1>
+            <p class="hero-subtitle"><strong>Pinpay is an API-first financial operations engine</strong> that helps organizations track payment obligations, reconcile incoming payments, and communicate with agents or customers over WhatsApp without building custom infrastructure or deploying an app.</p>
+            <p class="hero-subtitle">Built for mobile-money economies, offline operations, and large agent networks.</p>
+            <p class="hero-tagline"><strong>No app. No manual reconciliation. No fragile spreadsheets.</strong></p>
+            <div class="hero-ctas">
+                <a href="#request-access" class="btn btn-primary">Request access</a>
+                <a href="/api/docs/" class="btn btn-secondary">View API docs</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. How Pinpay Works -->
+    <section class="what-it-does">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="numbered-blocks">
+                <div class="numbered-block">
+                    <span class="block-number">01</span>
+                    <h3 class="block-title">Define payment obligations via API</h3>
+                    <p class="block-description">Create collections programmatically: loan repayments, trade credit, agent collections, or customer dues.</p>
+                    <div class="code-example">
+                        <pre class="code-block"><code><span class="code-command">curl</span> <span class="code-flag">-X POST</span> <span class="code-url">https://api.pinpay.com/v1/collections/</span> \
+  <span class="code-flag">-H</span> <span class="code-string">"Authorization: Bearer ${PINPAY_API_KEY}"</span> \
+  <span class="code-flag">-H</span> <span class="code-string">"Content-Type: application/json"</span> \
+  <span class="code-flag">-d</span> <span class="code-string">'{
+    <span class="code-key">"agent_id"</span>: <span class="code-value">"agent-123"</span>,
+    <span class="code-key">"amount"</span>: <span class="code-value">"5000.00"</span>,
+    <span class="code-key">"due_date"</span>: <span class="code-value">"2024-12-31T23:59:59Z"</span>,
+    <span class="code-key">"notes"</span>: <span class="code-value">"Trade credit payment"</span>
+  }'</span></code></pre>
+                    </div>
+                </div>
+                <div class="numbered-block">
+                    <span class="block-number">02</span>
+                    <h3 class="block-title">Automatic reconciliation</h3>
+                    <p class="block-description">Incoming payments (mobile money, bank transfers, cash) are matched to expected collections. Unmatched cases are flagged for review.</p>
+                    <div class="code-example">
+                        <pre class="code-block"><code><span class="code-command">curl</span> <span class="code-flag">-X POST</span> <span class="code-url">https://api.pinpay.com/v1/reconciliation/payments/</span> \
+  <span class="code-flag">-H</span> <span class="code-string">"Authorization: Bearer ${PINPAY_API_KEY}"</span> \
+  <span class="code-flag">-H</span> <span class="code-string">"Content-Type: application/json"</span> \
+  <span class="code-flag">-d</span> <span class="code-string">'{
+    <span class="code-key">"agent_id"</span>: <span class="code-value">"agent-123"</span>,
+    <span class="code-key">"amount"</span>: <span class="code-value">"5000.00"</span>,
+    <span class="code-key">"payment_date"</span>: <span class="code-value">"2024-12-31T10:30:00Z"</span>,
+    <span class="code-key">"reference"</span>: <span class="code-value">"MOBILE_MONEY_REF_12345"</span>
+  }'</span></code></pre>
+                    </div>
+                </div>
+                <div class="numbered-block">
+                    <span class="block-number">03</span>
+                    <h3 class="block-title">WhatsApp reminders & monitoring</h3>
+                    <p class="block-description">Agents or customers receive WhatsApp reminders automatically. Your team monitors operations through a read-only console with no manual actions required.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Core Capabilities -->
+    <section class="core-capabilities">
+        <div class="container">
+            <h2 class="section-title">Capabilities</h2>
+            
+            <div class="capability-block">
+                <h3 class="capability-title">API-First Collections Engine</h3>
+                <p class="capability-description">Create and manage payment obligations via REST API. Track lifecycle, attach context, receive webhooks. <strong>All execution happens via API.</strong></p>
+            </div>
+
+            <div class="capability-block capability-with-image">
+                <div class="capability-content">
+                    <h3 class="capability-title">Automatic Payment Reconciliation</h3>
+                    <p class="capability-description">Record incoming payments programmatically. Automatic matching by amount and agent. Full audit trail. <strong>No spreadsheets. No manual matching.</strong></p>
+                </div>
+                <div class="capability-image">
+                    <img src="{% static 'images/reconciliation.png' %}" alt="Réconciliation automatique - Paiements appariés et à réviser" class="inline-image" onerror="this.style.display='none';">
+                </div>
+            </div>
+
+            <div class="capability-block capability-with-image">
+                <div class="capability-content">
+                    <h3 class="capability-title">WhatsApp Communication Infrastructure</h3>
+                    <p class="capability-description">Template-based WhatsApp reminders and notifications. Async message queues for reliability. <strong>WhatsApp is your communication channel, not your UI.</strong></p>
+                </div>
+                <div class="capability-image">
+                    <img src="{% static 'images/whatsapp-conversation.png' %}" alt="Conversation WhatsApp - Rappel de paiement et confirmation" class="inline-image" onerror="this.style.display='none';">
+                </div>
+            </div>
+
+            <div class="capability-block capability-with-image">
+                <div class="capability-content">
+                    <h3 class="capability-title">Analytics & Operations Console</h3>
+                    <p class="capability-description">Recovery rates, payment delays, agent-level summaries accessible via API. A minimal, read-only console for operations monitoring. <strong>Bring your own dashboard or BI tool.</strong></p>
+                </div>
+                <div class="capability-image">
+                    <img src="{% static 'images/dashboard.png' %}" alt="Tableau de bord opérationnel - Collections, en attente, taux de récupération" class="inline-image" onerror="this.style.display='none';">
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- 5. Closing CTA -->
+    <section class="closing-cta">
+        <div class="container">
+            <blockquote class="closing-quote">
+                <p><strong>Pinpay doesn't replace your systems.</strong></p>
+                <p><strong>It connects them and runs the hard parts automatically.</strong></p>
+            </blockquote>
+            <div class="closing-cta-buttons">
+                <a href="#request-access" class="btn btn-primary">Request access</a>
+                <a href="/api/docs/" class="btn btn-secondary">View API docs</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Footer -->
+    <footer class="footer">
+        <div class="container">
+            <nav class="footer-nav">
+                <a href="/api/docs/">Docs</a>
+                <a href="#request-access">Request access</a>
+                <a href="#legal">Legal</a>
+            </nav>
+            <p class="footer-text">Built for mobile money economies</p>
+        </div>
+    </footer>
+
+    <!-- Request Access Modal (simple) -->
+    <div id="request-access" class="modal">
+        <div class="modal-content">
+            <h2>Request Access</h2>
+            <p>Pinpay is currently in pilot phase. To request access, please contact us.</p>
+            <p>Email: <a href="mailto:contact@pinpay.com">contact@pinpay.com</a></p>
+            <a href="#" class="modal-close">Close</a>
+        </div>
+    </div>
+</main>
+{% endblock %}

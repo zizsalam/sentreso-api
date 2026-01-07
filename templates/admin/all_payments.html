@@ -1,0 +1,94 @@
+{% extends "admin/base.html" %}
+
+{% block title %}All Payments - Pinpay Admin{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <header class="page-header">
+        <h1 class="page-title">All payments</h1>
+        <p class="page-subtitle">View and filter all payment records</p>
+    </header>
+
+    <!-- Filters -->
+    <div class="filters-section">
+        <form method="get" class="filters-form">
+            <div class="filter-group">
+                <label for="status" class="filter-label">Status</label>
+                <select name="status" id="status" class="filter-select">
+                    <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All</option>
+                    <option value="matched" {% if status_filter == 'matched' %}selected{% endif %}>Matched</option>
+                    <option value="unmatched" {% if status_filter == 'unmatched' %}selected{% endif %}>Unmatched</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="method" class="filter-label">Payment Method</label>
+                <select name="method" id="method" class="filter-select">
+                    <option value="all" {% if payment_method_filter == 'all' %}selected{% endif %}>All</option>
+                    <option value="mobile_money" {% if payment_method_filter == 'mobile_money' %}selected{% endif %}>Mobile Money</option>
+                    <option value="bank_transfer" {% if payment_method_filter == 'bank_transfer' %}selected{% endif %}>Bank Transfer</option>
+                    <option value="cash" {% if payment_method_filter == 'cash' %}selected{% endif %}>Cash</option>
+                    <option value="other" {% if payment_method_filter == 'other' %}selected{% endif %}>Other</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="agent" class="filter-label">Agent</label>
+                <select name="agent" id="agent" class="filter-select">
+                    <option value="">All agents</option>
+                    {% for agent in agents %}
+                    <option value="{{ agent.id }}" {% if agent_filter == agent.id|stringformat:"s" %}selected{% endif %}>{{ agent.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+            {% if status_filter != 'all' or payment_method_filter != 'all' or agent_filter %}
+            <a href="{% url 'admin_ui:all-payments' %}" class="btn">Clear</a>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Payments Table -->
+    <div class="collections-table-wrapper">
+        <table class="collections-table">
+            <thead>
+                <tr>
+                    <th>Agent</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Transaction Ref</th>
+                    <th>Received</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if payments %}
+                    {% for payment in payments %}
+                    <tr>
+                        <td>{{ payment.agent.name }}</td>
+                        <td>{{ payment.amount }} FCFA</td>
+                        <td><span class="payment-method">{{ payment.get_payment_method_display }}</span></td>
+                        <td><code class="txn-ref">{{ payment.transaction_reference|truncatechars:20 }}</code></td>
+                        <td>{{ payment.received_at|date:"Y-m-d H:i" }}</td>
+                        <td>
+                            {% if payment.is_matched %}
+                                <span class="status-badge status-paid">Matched</span>
+                            {% else %}
+                                <span class="status-badge status-needs-review">Unmatched</span>
+                            {% endif %}
+                        </td>
+                        <td><a href="#" class="action-link">View</a></td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="empty">No payments found</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

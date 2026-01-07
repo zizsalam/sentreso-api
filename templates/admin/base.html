@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Pinpay Admin{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/admin/main.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="admin-body">
+    <div class="admin-container">
+        <!-- Left Navigation -->
+        <nav class="admin-nav">
+            <div class="nav-header">
+                <h1 class="nav-logo">Pinpay</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="{% url 'admin_ui:today' %}" class="nav-link {% if request.resolver_match.url_name == 'today' %}active{% endif %}">Today</a></li>
+                <li><a href="{% url 'admin_ui:all-payments' %}" class="nav-link {% if request.resolver_match.url_name == 'all-payments' %}active{% endif %}">All payments</a></li>
+                <li><a href="{% url 'admin_ui:needs-review' %}" class="nav-link {% if request.resolver_match.url_name == 'needs-review' %}active{% endif %}">Needs review</a></li>
+                <li><a href="{% url 'admin_ui:agents' %}" class="nav-link {% if request.resolver_match.url_name == 'agents' %}active{% endif %}">Agents</a></li>
+                <li><a href="{% url 'admin_ui:settings' %}" class="nav-link {% if request.resolver_match.url_name == 'settings' %}active{% endif %}">Settings</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+
