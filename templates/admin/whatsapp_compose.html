@@ -1,0 +1,100 @@
+{% extends "admin/base.html" %}
+
+{% block title %}WhatsApp Composer{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <header class="page-header">
+        <h1 class="page-title">WhatsApp Composer</h1>
+        <p class="page-subtitle">Create and send WhatsApp messages from the demo UI</p>
+    </header>
+
+    <div class="alert alert-info">
+        Use an approved template for reliable delivery. Custom messages work only within the 24-hour window.
+    </div>
+
+    {% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+    {% if success %}
+    <div class="alert alert-success">{{ success }}</div>
+    {% endif %}
+
+    <div class="form-section">
+        <form method="post" class="admin-form">
+            {% csrf_token %}
+            <div class="form-grid">
+                <label class="form-label">Recipient (Agent)</label>
+                <select name="agent_id" class="form-input" required>
+                    <option value="">Select agent</option>
+                    {% for agent in agents %}
+                    <option value="{{ agent.id }}">{{ agent.name }} ({{ agent.whatsapp_number }})</option>
+                    {% endfor %}
+                </select>
+
+                <label class="form-label">Template (optional)</label>
+                <select name="template_id" class="form-input">
+                    <option value="">No template</option>
+                    {% for tpl in templates %}
+                    <option value="{{ tpl.id }}">{{ tpl.name }} ({{ tpl.whatsapp_template_name }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-grid">
+                <label class="form-label">Template param 1</label>
+                <input type="text" name="param_1" class="form-input" placeholder="e.g. amount">
+
+                <label class="form-label">Template param 2</label>
+                <input type="text" name="param_2" class="form-input" placeholder="e.g. currency">
+
+                <label class="form-label">Template param 3</label>
+                <input type="text" name="param_3" class="form-input" placeholder="e.g. transaction id">
+
+                <label class="form-label">Template param 4</label>
+                <input type="text" name="param_4" class="form-input" placeholder="e.g. timestamp">
+            </div>
+            <p class="helper-text">Params are positional: 1→amount, 2→currency, 3→reference, 4→timestamp.</p>
+
+            <label class="form-label">Custom message (optional)</label>
+            <textarea name="message" rows="3" class="form-input" placeholder="Custom message"></textarea>
+            <p class="helper-text">If a template is selected, template content is sent.</p>
+
+            <button type="submit" class="btn btn-primary">Send WhatsApp</button>
+        </form>
+    </div>
+
+    <div class="table-section">
+        <h3>Last 10 WhatsApp messages</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>To</th>
+                    <th>Template</th>
+                    <th>Message ID</th>
+                    <th>Created</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in recent_messages %}
+                <tr>
+                    <td>
+                        <span class="status-dot status-{{ m.status }}"></span>
+                        {{ m.status }}
+                    </td>
+                    <td>{{ m.to_number }}</td>
+                    <td>{{ m.template.whatsapp_template_name|default:"custom" }}</td>
+                    <td>{{ m.message_id|default:"-" }}</td>
+                    <td>{{ m.created_at }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5">No messages yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+

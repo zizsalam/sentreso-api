@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'apps.whatsapp',
     'apps.reconciliation',
     'apps.reports',
+    'apps.admin_ui',
 ]
 
 MIDDLEWARE = [
@@ -53,7 +54,7 @@ ROOT_URLCONF = 'sentreso.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -103,6 +104,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -158,3 +162,12 @@ RQ_QUEUES = {
 # API Key Configuration
 API_KEY_PREFIX_LIVE = config('API_KEY_PREFIX_LIVE', default='sk_live_')
 API_KEY_PREFIX_TEST = config('API_KEY_PREFIX_TEST', default='sk_test_')
+
+# WhatsApp Business API Configuration
+WHATSAPP_API_URL = config('WHATSAPP_API_URL', default=None)
+WHATSAPP_API_TOKEN = config('WHATSAPP_API_TOKEN', default=None)
+WHATSAPP_PHONE_NUMBER_ID = config('WHATSAPP_PHONE_NUMBER_ID', default=None)
+
+# Demo template aliases (approved template names in Meta)
+PINPAY_TEMPLATE_NAME = config('PINPAY_TEMPLATE_NAME', default=None)
+PINPAY_TEMPLATE_LANGUAGE = config('PINPAY_TEMPLATE_LANGUAGE', default='en_US')

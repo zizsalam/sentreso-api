@@ -26,8 +26,12 @@ class WhatsAppService:
         Returns:
             bool: True if message was sent successfully, False otherwise
         """
-        if not self.api_url or not self.api_token:
+        if not self.api_url or not self.api_token or not self.phone_number_id:
             # WhatsApp API not configured
+            message.error_message = (
+                "WhatsApp API not configured. "
+                "Set WHATSAPP_API_URL, WHATSAPP_API_TOKEN, and WHATSAPP_PHONE_NUMBER_ID."
+            )
             return False
 
         try:
@@ -44,9 +48,12 @@ class WhatsAppService:
                 'Content-Type': 'application/json',
             }
 
-            url = f"{self.api_url}/v1/{self.phone_number_id}/messages"
+            base_url = self.api_url.rstrip('/')
+            url = f"{base_url}/{self.phone_number_id}/messages"
             response = requests.post(url, json=payload, headers=headers, timeout=10)
-            response.raise_for_status()
+            if response.status_code >= 400:
+                message.error_message = f"{response.status_code} {response.text}"
+                return False
 
             result = response.json()
             message.message_id = result.get('messages', [{}])[0].get('id')
@@ -68,20 +75,20 @@ class WhatsAppService:
 
         # Extract template parameters
         components = []
-        if template_params:
-            params = []
+        params = []
+        if isinstance(template_params, list):
+            for value in template_params:
+                params.append({'type': 'text', 'text': str(value)})
+        elif isinstance(template_params, dict):
             for key in ['agent_name', 'amount', 'due_date']:
                 if key in template_params:
-                    params.append({
-                        'type': 'text',
-                        'text': str(template_params[key])
-                    })
+                    params.append({'type': 'text', 'text': str(template_params[key])})
 
-            if params:
-                components = [{
-                    'type': 'body',
-                    'parameters': params
-                }]
+        if params:
+            components = [{
+                'type': 'body',
+                'parameters': params
+            }]
 
         payload = {
             'messaging_product': 'whatsapp',
@@ -108,4 +115,9 @@ class WhatsAppService:
                 'body': message.content
             }
         }
+
+
+
+
+
 

@@ -12,3 +12,10 @@ urlpatterns = [
     path('collections/export/', CollectionsExportView.as_view(), name='collections-export'),
 ]
 
+
+
+
+
+
+
+

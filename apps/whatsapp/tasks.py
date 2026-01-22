@@ -77,7 +77,11 @@ def send_collection_reminder_task(collection_id):
             collection.save()
         else:
             message.status = 'failed'
-            message.error_message = "WhatsApp API not configured. Set WHATSAPP_API_URL and WHATSAPP_API_TOKEN in settings."
+            if not message.error_message:
+                message.error_message = (
+                    "WhatsApp API not configured. "
+                    "Set WHATSAPP_API_URL, WHATSAPP_API_TOKEN, and WHATSAPP_PHONE_NUMBER_ID."
+                )
 
         message.save()
 
@@ -121,7 +125,11 @@ def send_whatsapp_message_task(master_id, agent_id, content):
             message.sent_at = timezone.now()
         else:
             message.status = 'failed'
-            message.error_message = "WhatsApp API not configured. Set WHATSAPP_API_URL and WHATSAPP_API_TOKEN in settings."
+            if not message.error_message:
+                message.error_message = (
+                    "WhatsApp API not configured. "
+                    "Set WHATSAPP_API_URL, WHATSAPP_API_TOKEN, and WHATSAPP_PHONE_NUMBER_ID."
+                )
 
         message.save()
 
@@ -131,4 +139,9 @@ def send_whatsapp_message_task(master_id, agent_id, content):
         # Log error
         print(f"Error sending WhatsApp message: {e}")
         return {'success': False, 'error': str(e)}
+
+
+
+
+
 

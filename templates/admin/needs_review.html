@@ -9,6 +9,19 @@
         <p class="page-subtitle">Unmatched payments requiring reconciliation</p>
     </header>
 
+    <div class="summary-grid">
+        <div class="summary-card">
+            <div class="summary-value">{{ total_count }}</div>
+            <div class="summary-label">Payments to review</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-value">Review</div>
+            <div class="summary-label">Open any row to see details</div>
+        </div>
+    </div>
+
+    <p class="helper-text">These payments are unmatched and need manual review.</p>
+
     <div class="collections-table-wrapper">
         <table class="collections-table">
             <thead>
@@ -30,7 +43,7 @@
                         <td><span class="payment-method">{{ payment.get_payment_method_display }}</span></td>
                         <td><code class="txn-ref">{{ payment.transaction_reference|truncatechars:20 }}</code></td>
                         <td>{{ payment.received_at|date:"Y-m-d H:i" }}</td>
-                        <td><a href="#" class="action-link">Review</a></td>
+                        <td><a href="{% url 'admin_ui:payment-detail' payment.id %}" class="action-link">Review</a></td>
                     </tr>
                     {% endfor %}
                 {% else %}

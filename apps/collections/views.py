@@ -5,7 +5,7 @@ API views for Collection model.
 from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from apps.api.permissions import IsAuthenticatedWithAPIKey
 from django.utils import timezone
 from django.db.models import Q
 from apps.collections.models import Collection
@@ -20,7 +20,7 @@ class CollectionViewSet(viewsets.ModelViewSet):
     All operations are scoped to the authenticated master.
     """
     serializer_class = CollectionSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedWithAPIKey]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['agent__name', 'agent__whatsapp_number', 'transaction_reference', 'notes']
     ordering_fields = ['created_at', 'due_date', 'amount', 'status']
@@ -108,4 +108,8 @@ class CollectionViewSet(viewsets.ModelViewSet):
 
         response_serializer = CollectionSerializer(collection)
         return Response(response_serializer.data)
+
+
+
+
 

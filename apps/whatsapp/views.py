@@ -5,7 +5,7 @@ API views for WhatsApp models.
 from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from apps.api.permissions import IsAuthenticatedWithAPIKey
 from django_rq import get_queue
 from apps.whatsapp.models import WhatsAppTemplate, WhatsAppMessage
 from apps.whatsapp.serializers import (
@@ -22,7 +22,7 @@ from apps.whatsapp.tasks import send_collection_reminder_task, send_whatsapp_mes
 class WhatsAppTemplateViewSet(viewsets.ModelViewSet):
     """ViewSet for WhatsAppTemplate management."""
     serializer_class = WhatsAppTemplateSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedWithAPIKey]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name', 'whatsapp_template_name', 'content']
     ordering_fields = ['created_at', 'name']
@@ -50,7 +50,7 @@ class WhatsAppTemplateViewSet(viewsets.ModelViewSet):
 class WhatsAppMessageViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet for viewing WhatsAppMessage records (read-only)."""
     serializer_class = WhatsAppMessageSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedWithAPIKey]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['to_number', 'from_number', 'content', 'message_id']
     ordering_fields = ['created_at', 'sent_at']
@@ -132,4 +132,8 @@ class WhatsAppMessageViewSet(viewsets.ReadOnlyModelViewSet):
             {'message': 'Message queued for sending'},
             status=status.HTTP_200_OK
         )
+
+
+
+
 

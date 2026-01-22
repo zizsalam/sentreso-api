@@ -6,3 +6,10 @@ class WhatsappConfig(AppConfig):
     name = 'apps.whatsapp'
     verbose_name = 'WhatsApp'
 
+
+
+
+
+
+
+

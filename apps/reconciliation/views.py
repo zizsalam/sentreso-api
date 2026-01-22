@@ -5,7 +5,7 @@ API views for Reconciliation models.
 from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from apps.api.permissions import IsAuthenticatedWithAPIKey
 from django.utils import timezone
 from apps.reconciliation.models import PaymentMatch, ReconciliationRecord
 from apps.reconciliation.serializers import (
@@ -20,7 +20,7 @@ from apps.agents.models import Agent
 class PaymentMatchViewSet(viewsets.ModelViewSet):
     """ViewSet for PaymentMatch management."""
     serializer_class = PaymentMatchSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedWithAPIKey]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['transaction_reference', 'notes']
     ordering_fields = ['created_at', 'received_at', 'amount']
@@ -48,7 +48,7 @@ class PaymentMatchViewSet(viewsets.ModelViewSet):
 class ReconciliationRecordViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet for viewing ReconciliationRecord (read-only)."""
     serializer_class = ReconciliationRecordSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedWithAPIKey]
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['created_at', 'started_at']
     ordering = ['-created_at']
@@ -93,4 +93,8 @@ class ReconciliationRecordViewSet(viewsets.ReadOnlyModelViewSet):
 
         response_serializer = ReconciliationRecordSerializer(record)
         return Response(response_serializer.data, status=status.HTTP_200_OK)
+
+
+
+
 

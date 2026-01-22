@@ -1,0 +1,276 @@
+{% extends "admin/base.html" %}
+{% load admin_extras %}
+
+{% block title %}Manual Import{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <h2>Manual Payment Import</h2>
+    <p>Upload a Wave CSV export and trigger WhatsApp activation.</p>
+</div>
+
+<div class="banner-row">
+    <div class="alert alert-info banner-card">
+        <strong>Demo flow:</strong> upload CSV → map columns → import → WhatsApp sent → audit records below.
+    </div>
+    <div class="alert alert-summary banner-card">
+        <strong>Summary:</strong> Paid Collections + WhatsAppMessages created for demo‑ready activation.
+    </div>
+</div>
+
+{% if errors %}
+<div class="alert alert-error">
+    <ul>
+        {% for error in errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if imported %}
+<div class="alert alert-success">
+    Import completed. Collections and WhatsApp messages were created.
+</div>
+{% endif %}
+
+{% if summary %}
+<div class="summary-grid">
+    <div class="summary-card">
+        <div class="summary-value">{{ summary.payments }}</div>
+        <div class="summary-label">Payments imported</div>
+    </div>
+    <div class="summary-card">
+        <div class="summary-value">{{ summary.agents }}</div>
+        <div class="summary-label">Customers identified</div>
+    </div>
+    <div class="summary-card">
+        <div class="summary-value">{{ summary.sent }}</div>
+        <div class="summary-label">WhatsApp sent</div>
+    </div>
+    <div class="summary-card">
+        <div class="summary-value">{{ summary.failed }}</div>
+        <div class="summary-label">WhatsApp failed</div>
+    </div>
+</div>
+{% endif %}
+
+<form method="post" enctype="multipart/form-data" class="admin-form">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="preview">
+
+    <div class="form-section">
+        <h3>1) Upload CSV</h3>
+        <div class="form-row">
+            <input type="file" name="csv_file" accept=".csv" required class="form-input">
+            <button type="submit" class="btn btn-primary">Preview</button>
+        </div>
+        <p class="helper-text">Expected columns: customer_name, phone_number, amount, payment_date, reference</p>
+        <p class="helper-text warning-text"><strong>Warning:</strong> re-uploading the same file will send messages again.</p>
+    </div>
+</form>
+
+<div class="form-section">
+    <h3>Optional: Generate Demo Payments</h3>
+    <form method="post" class="admin-form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="generate">
+
+        <div class="form-grid">
+            <label class="form-label">Scenario</label>
+            <select name="scenario" class="form-input">
+                <option value="taxi">Taxi</option>
+                <option value="merchant">Merchant</option>
+            </select>
+
+            <label class="form-label">Count</label>
+            <input type="number" name="count" value="10" min="1" max="200" class="form-input">
+
+            <label class="form-label">Force phone number (optional)</label>
+            <input type="text" name="phone" placeholder="+221774454330" class="form-input">
+
+            <label class="form-label">Template name (optional)</label>
+            <input type="text" name="template_name" placeholder="pinpay or approved template name" class="form-input">
+
+            <label class="form-label">Template language</label>
+            <input type="text" name="template_language" value="fr" class="form-input">
+
+            <label class="form-label">Custom message (optional)</label>
+            <textarea name="message" rows="3" placeholder="Merci pour votre paiement." class="form-input"></textarea>
+        </div>
+
+        <button type="submit" class="btn">Generate demo payments</button>
+    </form>
+</div>
+
+<div class="form-section">
+    <h3>Campaigns (one-click)</h3>
+    <p class="helper-text">Send loyalty message using the approved Pinpay template.</p>
+    <form method="post" class="admin-form">
+        {% csrf_token %}
+        <div class="form-row">
+            <input type="hidden" name="action" value="campaign_last_import">
+            <button type="submit" class="btn btn-primary">Send to last import</button>
+            <span class="helper-text">{{ last_import_count }} recipients</span>
+        </div>
+    </form>
+    <form method="post" class="admin-form">
+        {% csrf_token %}
+        <div class="form-row">
+            <input type="hidden" name="action" value="campaign_today">
+            <button type="submit" class="btn">Send to today's payers</button>
+        </div>
+    </form>
+
+    {% if campaign_summary %}
+        {% if campaign_summary.error %}
+            <div class="alert alert-error">{{ campaign_summary.error }}</div>
+        {% else %}
+            <div class="alert alert-success">
+                Campaign sent to {{ campaign_summary.label }}:
+                {{ campaign_summary.sent }} sent, {{ campaign_summary.failed }} failed.
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+{% if headers %}
+<div class="form-section">
+    <h3>2) Map Columns</h3>
+    <form method="post" class="admin-form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="import">
+
+        <div class="form-grid">
+            <label class="form-label">Customer Name</label>
+            <select name="map_customer_name" class="form-input">
+                {% for h in headers %}
+                <option value="{{ h }}" {% if mapping.customer_name == h %}selected{% endif %}>{{ h }}</option>
+                {% endfor %}
+            </select>
+
+            <label class="form-label">Phone Number</label>
+            <select name="map_phone_number" class="form-input">
+                {% for h in headers %}
+                <option value="{{ h }}" {% if mapping.phone_number == h %}selected{% endif %}>{{ h }}</option>
+                {% endfor %}
+            </select>
+            <div class="helper-text">Format required: +221774454330 (include country code).</div>
+
+            <label class="form-label">Amount</label>
+            <select name="map_amount" class="form-input">
+                {% for h in headers %}
+                <option value="{{ h }}" {% if mapping.amount == h %}selected{% endif %}>{{ h }}</option>
+                {% endfor %}
+            </select>
+
+            <label class="form-label">Payment Date</label>
+            <select name="map_payment_date" class="form-input">
+                {% for h in headers %}
+                <option value="{{ h }}" {% if mapping.payment_date == h %}selected{% endif %}>{{ h }}</option>
+                {% endfor %}
+            </select>
+
+            <label class="form-label">Reference</label>
+            <select name="map_reference" class="form-input">
+                {% for h in headers %}
+                <option value="{{ h }}" {% if mapping.reference == h %}selected{% endif %}>{{ h }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-section">
+            <h3>3) WhatsApp Trigger</h3>
+            <label class="form-label">Template name (optional)</label>
+            <input type="text" name="template_name" placeholder="pinpay or approved template name" class="form-input">
+
+            <label class="form-label">Template language</label>
+            <input type="text" name="template_language" value="fr" class="form-input">
+
+            <div class="toggle-row">
+                <input type="checkbox" id="show_custom" name="show_custom">
+                <label for="show_custom">Show advanced custom message</label>
+            </div>
+
+            <div id="custom_message_block" class="hidden">
+                <label class="form-label">Custom message (optional)</label>
+                <textarea name="message" rows="3" placeholder="Merci pour votre paiement." class="form-input"></textarea>
+                <p class="helper-text">If template is provided, custom text is ignored.</p>
+            </div>
+
+            <div class="confirm-row">
+                <input type="checkbox" id="confirm_send" name="confirm_send" value="yes">
+                <label for="confirm_send"><strong>I understand messages will be sent immediately.</strong></label>
+            </div>
+            <div class="alert alert-warning">
+                Messages will be sent immediately to the phone numbers in this file.
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Import + Send WhatsApp</button>
+    </form>
+</div>
+{% endif %}
+
+{% if preview_rows %}
+<div class="table-section">
+    <h3>Preview (first 10 rows)</h3>
+    <table class="data-table">
+        <thead>
+            <tr>
+                {% for h in headers %}
+                <th>{{ h }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in preview_rows %}
+            <tr>
+                {% for h in headers %}
+                <td>{{ row|get_item:h }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const templateInput = document.querySelector('input[name="template_name"]');
+    const messageField = document.querySelector('textarea[name="message"]');
+    const helperText = messageField ? messageField.parentElement.querySelector('.helper-text') : null;
+    const showCustom = document.getElementById('show_custom');
+    const customBlock = document.getElementById('custom_message_block');
+
+    function toggleMessage() {
+        const hasTemplate = templateInput && templateInput.value.trim().length > 0;
+        if (messageField) {
+            messageField.disabled = hasTemplate;
+            messageField.classList.toggle('is-disabled', hasTemplate);
+        }
+        if (helperText && hasTemplate) {
+            helperText.textContent = 'Template selected. Custom text is disabled.';
+        } else if (helperText) {
+            helperText.textContent = 'If template is provided, custom text is ignored.';
+        }
+    }
+    if (templateInput) {
+        templateInput.addEventListener('input', toggleMessage);
+        toggleMessage();
+    }
+
+    if (showCustom && customBlock) {
+        showCustom.addEventListener('change', () => {
+            customBlock.classList.toggle('hidden', !showCustom.checked);
+        });
+        customBlock.classList.add('hidden');
+    }
+});
+</script>
+{% endblock %}
+{% endblock %}
+

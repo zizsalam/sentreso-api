@@ -22,3 +22,10 @@ class WhatsAppMessageAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'created_at', 'updated_at')
     date_hierarchy = 'created_at'
 
+
+
+
+
+
+
+

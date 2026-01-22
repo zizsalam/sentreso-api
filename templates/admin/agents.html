@@ -9,6 +9,19 @@
         <p class="page-subtitle">Manage payment agents</p>
     </header>
 
+    <div class="summary-grid">
+        <div class="summary-card">
+            <div class="summary-value">{{ total_count }}</div>
+            <div class="summary-label">Total agents</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-value">{{ active_count }}</div>
+            <div class="summary-label">Active agents</div>
+        </div>
+    </div>
+
+    <p class="helper-text">Agents are matched by WhatsApp number during import.</p>
+
     <div class="collections-table-wrapper">
         <table class="collections-table">
             <thead>
@@ -36,7 +49,7 @@
                             {% endif %}
                         </td>
                         <td>{{ agent.created_at|date:"Y-m-d" }}</td>
-                        <td><a href="#" class="action-link">View</a></td>
+                        <td><a href="{% url 'admin_ui:agent-detail' agent.id %}" class="action-link">View</a></td>
                     </tr>
                     {% endfor %}
                 {% else %}

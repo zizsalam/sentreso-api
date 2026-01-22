@@ -143,3 +143,10 @@ class WhatsAppMessage(BaseModel):
     def __str__(self):
         return f"{self.direction} - {self.to_number} - {self.get_status_display()}"
 
+
+
+
+
+
+
+

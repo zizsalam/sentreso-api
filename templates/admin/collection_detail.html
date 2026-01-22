@@ -1,0 +1,57 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Collection Detail - Pinpay Admin{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <header class="page-header">
+        <h1 class="page-title">Collection detail</h1>
+        <p class="page-subtitle">Paid/expected payment record</p>
+    </header>
+
+    <div class="collections-table-wrapper">
+        <table class="collections-table">
+            <tbody>
+                <tr><th>Payer</th><td>{{ collection.agent.name }}</td></tr>
+                <tr><th>WhatsApp</th><td>{{ collection.agent.whatsapp_number }}</td></tr>
+                <tr><th>Amount</th><td>{{ collection.amount }} FCFA</td></tr>
+                <tr><th>Status</th><td>{{ collection.get_status_display }}</td></tr>
+                <tr><th>Due Date</th><td>{{ collection.due_date }}</td></tr>
+                <tr><th>Paid At</th><td>{{ collection.paid_at|default:"-" }}</td></tr>
+                <tr><th>Reference</th><td>{{ collection.transaction_reference|default:"-" }}</td></tr>
+                <tr><th>Notes</th><td>{{ collection.notes|default:"-" }}</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-section">
+        <h3>Last 10 WhatsApp messages</h3>
+        <table class="collections-table">
+            <thead>
+                <tr>
+                    <th>To</th>
+                    <th>Status</th>
+                    <th>Template</th>
+                    <th>Message ID</th>
+                    <th>Created</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for msg in messages %}
+                <tr>
+                    <td>{{ msg.to_number }}</td>
+                    <td>{{ msg.status }}</td>
+                    <td>{{ msg.template.whatsapp_template_name|default:"custom" }}</td>
+                    <td>{{ msg.message_id|default:"-" }}</td>
+                    <td>{{ msg.created_at }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="empty">No messages for this collection.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+

@@ -6,3 +6,10 @@ class ReportsConfig(AppConfig):
     name = 'apps.reports'
     verbose_name = 'Reports'
 
+
+
+
+
+
+
+

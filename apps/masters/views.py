@@ -5,7 +5,8 @@ API views for Master model.
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
+from apps.api.permissions import IsAuthenticatedWithAPIKey
 from apps.masters.models import Master
 from apps.masters.serializers import MasterCreateSerializer, MasterSerializer
 
@@ -27,7 +28,7 @@ class MasterViewSet(viewsets.ModelViewSet):
         """
         if self.action == 'create':
             return [AllowAny()]
-        return [IsAuthenticated()]
+        return [IsAuthenticatedWithAPIKey()]
 
     def get_serializer_class(self):
         """Use different serializer for creation."""

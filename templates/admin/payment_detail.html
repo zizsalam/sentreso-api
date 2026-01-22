@@ -1,0 +1,44 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Payment Detail - Pinpay Admin{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <header class="page-header">
+        <h1 class="page-title">Payment detail</h1>
+        <p class="page-subtitle">Wave payment record (manual or reconciliation)</p>
+    </header>
+
+    <div class="collections-table-wrapper">
+        <table class="collections-table">
+            <tbody>
+                <tr><th>Agent</th><td>{{ payment.agent.name }}</td></tr>
+                <tr><th>WhatsApp</th><td>{{ payment.agent.whatsapp_number }}</td></tr>
+                <tr><th>Amount</th><td>{{ payment.amount }} FCFA</td></tr>
+                <tr><th>Method</th><td>{{ payment.get_payment_method_display }}</td></tr>
+                <tr><th>Transaction Ref</th><td>{{ payment.transaction_reference }}</td></tr>
+                <tr><th>Received</th><td>{{ payment.received_at }}</td></tr>
+                <tr><th>Matched</th><td>{{ payment.is_matched }}</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-section">
+        <h3>Matched Collection</h3>
+        {% if matched_collection %}
+        <table class="collections-table">
+            <tbody>
+                <tr><th>Collection ID</th><td>{{ matched_collection.id }}</td></tr>
+                <tr><th>Status</th><td>{{ matched_collection.get_status_display }}</td></tr>
+                <tr><th>Amount</th><td>{{ matched_collection.amount }} FCFA</td></tr>
+                <tr><th>Reference</th><td>{{ matched_collection.transaction_reference|default:"-" }}</td></tr>
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty">No matched collection.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+

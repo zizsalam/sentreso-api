@@ -4,7 +4,7 @@ API views for Reports and Analytics.
 
 from rest_framework import views, status
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from apps.api.permissions import IsAuthenticatedWithAPIKey
 from django.db.models import Sum, Count, Avg, Q
 from django.utils import timezone
 from datetime import timedelta
@@ -19,7 +19,7 @@ from apps.whatsapp.models import WhatsAppMessage
 
 class DashboardView(views.APIView):
     """View for dashboard statistics."""
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedWithAPIKey]
 
     def get(self, request):
         """Get dashboard statistics."""
@@ -106,7 +106,7 @@ class DashboardView(views.APIView):
 
 class CollectionsExportView(views.APIView):
     """View for exporting collections to CSV."""
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedWithAPIKey]
 
     def get(self, request):
         """Export collections to CSV."""
@@ -160,4 +160,8 @@ class CollectionsExportView(views.APIView):
             ])
 
         return response
+
+
+
+
 

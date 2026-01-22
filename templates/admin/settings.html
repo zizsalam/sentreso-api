@@ -52,6 +52,32 @@
                 <p class="settings-note">Use this API key to authenticate API requests. Keep it secure and never share it publicly.</p>
             </div>
         </section>
+
+        <!-- WhatsApp Configuration -->
+        <section class="settings-section">
+            <h2 class="settings-section-title">WhatsApp Configuration</h2>
+            <div class="settings-content">
+                <div class="settings-row">
+                    <span class="settings-label">Status</span>
+                    <span class="settings-value">
+                        {% if whatsapp_configured %}
+                            <span class="status-badge status-paid">Configured</span>
+                        {% else %}
+                            <span class="status-badge status-pending">Missing</span>
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="settings-row">
+                    <span class="settings-label">Sender ID</span>
+                    <span class="settings-value">{{ whatsapp_sender_id|default:"Not set" }}</span>
+                </div>
+                <div class="settings-row">
+                    <span class="settings-label">Pinpay template</span>
+                    <span class="settings-value">{{ pinpay_template|default:"Not set" }}</span>
+                </div>
+                <p class="settings-note">Templates are approved in Meta Business Suite.</p>
+            </div>
+        </section>
     </div>
 </div>
 {% endblock %}

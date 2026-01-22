@@ -54,3 +54,10 @@ class CollectionMarkPaidSerializer(serializers.Serializer):
     payment_method = serializers.ChoiceField(choices=Collection.PAYMENT_METHOD_CHOICES, required=False)
     notes = serializers.CharField(required=False, allow_blank=True)
 
+
+
+
+
+
+
+

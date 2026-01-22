@@ -34,3 +34,10 @@ class CollectionManager(models.Manager):
             queryset = queryset.filter(master=master)
         return queryset
 
+
+
+
+
+
+
+

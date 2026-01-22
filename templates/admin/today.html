@@ -9,6 +9,23 @@
         <p class="page-subtitle">What needs action today</p>
     </header>
 
+    <div class="summary-grid">
+        <div class="summary-card">
+            <div class="summary-value">{{ pending_count }}</div>
+            <div class="summary-label">Pending collections</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-value">{{ overdue_count }}</div>
+            <div class="summary-label">Overdue</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-value">Manual import</div>
+            <div class="summary-label"><a href="{% url 'admin_ui:manual-import' %}" class="action-link">Open importer</a></div>
+        </div>
+    </div>
+
+    <p class="helper-text">Tip: Use manual import to activate customers after Wave payments.</p>
+
     <div class="collections-table-wrapper">
         <table class="collections-table">
             <thead>
@@ -28,7 +45,7 @@
                         <td>{{ collection.amount }} FCFA</td>
                         <td>{{ collection.due_date|date:"Y-m-d" }}</td>
                         <td><span class="status-badge status-{{ collection.status }}">{{ collection.get_status_display }}</span></td>
-                        <td><a href="#" class="action-link">View</a></td>
+                        <td><a href="{% url 'admin_ui:collection-detail' collection.id %}" class="action-link">View</a></td>
                     </tr>
                     {% endfor %}
                 {% else %}

@@ -9,6 +9,21 @@
         <p class="page-subtitle">View and filter all payment records</p>
     </header>
 
+    <div class="summary-grid">
+        <div class="summary-card">
+            <div class="summary-value">{{ total_count }}</div>
+            <div class="summary-label">Results</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-value">{{ matched_count }}</div>
+            <div class="summary-label">Matched</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-value">{{ unmatched_count }}</div>
+            <div class="summary-label">Unmatched</div>
+        </div>
+    </div>
+
     <!-- Filters -->
     <div class="filters-section">
         <form method="get" class="filters-form">
@@ -47,6 +62,7 @@
             <a href="{% url 'admin_ui:all-payments' %}" class="btn">Clear</a>
             {% endif %}
         </form>
+        <p class="helper-text">Filters apply to current results only.</p>
     </div>
 
     <!-- Payments Table -->
@@ -79,7 +95,7 @@
                                 <span class="status-badge status-needs-review">Unmatched</span>
                             {% endif %}
                         </td>
-                        <td><a href="#" class="action-link">View</a></td>
+                        <td><a href="{% url 'admin_ui:payment-detail' payment.id %}" class="action-link">View</a></td>
                     </tr>
                     {% endfor %}
                 {% else %}

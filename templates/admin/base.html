@@ -20,6 +20,8 @@
             </div>
             <ul class="nav-menu">
                 <li><a href="{% url 'admin_ui:today' %}" class="nav-link {% if request.resolver_match.url_name == 'today' %}active{% endif %}">Today</a></li>
+                <li><a href="{% url 'admin_ui:manual-import' %}" class="nav-link {% if request.resolver_match.url_name == 'manual-import' %}active{% endif %}">Manual import</a></li>
+                <li><a href="{% url 'admin_ui:whatsapp-compose' %}" class="nav-link {% if request.resolver_match.url_name == 'whatsapp-compose' %}active{% endif %}">WhatsApp composer</a></li>
                 <li><a href="{% url 'admin_ui:all-payments' %}" class="nav-link {% if request.resolver_match.url_name == 'all-payments' %}active{% endif %}">All payments</a></li>
                 <li><a href="{% url 'admin_ui:needs-review' %}" class="nav-link {% if request.resolver_match.url_name == 'needs-review' %}active{% endif %}">Needs review</a></li>
                 <li><a href="{% url 'admin_ui:agents' %}" class="nav-link {% if request.resolver_match.url_name == 'agents' %}active{% endif %}">Agents</a></li>

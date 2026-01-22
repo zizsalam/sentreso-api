@@ -85,3 +85,10 @@ class SendMessageSerializer(serializers.Serializer):
             raise serializers.ValidationError("Agent not found or does not belong to your account.")
         return value
 
+
+
+
+
+
+
+
